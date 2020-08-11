@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Template
+labels:
+  demo: mapit-template-ger
+metadata:
+  annotations:
+    description: MapIt Ger
+  name: mapit-ger
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: ${APP_NAME}
+    labels:
+      app: ${APP_NAME}
+      application: ${APP_NAME}
+  spec:
+    tags:
+    - name: latest
+parameters:
+- description: Name of the service
+  displayName: Application name
+  name: APP_NAME
