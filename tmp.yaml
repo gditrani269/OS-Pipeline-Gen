@@ -1,7 +1,7 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 labels:
-  demo: pepelui
+  demo: pipe-template-ger
 metadata:
   annotations:
     description: template de generacion de pipelines
@@ -10,32 +10,55 @@ parameters:
 - description: Name of the App
   displayName: App Name
   name: APP_NAME
+- description: Uri of project
+  displayName: Project Uri
+  name: GIT_URL
 objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-   name: pepelui
+    name: pipe-template-ger
 spec:
   strategy:
     type: JenkinsPipeline
     jenkinsPipelineStrategy:
       jenkinsfile: |-
         node {
-          stage('holis') {
-            sh "echo test 1"
+          stage('delete prev ver') {
+            sh 'oc delete all --selector app=' + ${APP_NAME}
+            sh 'oc delete all --selector application=' + ${APP_NAME}
           }
-          stage('input ') {
-            sh 'echo hola'
-            script {
-                 def userInput = input(
-                 id: 'userInput', message: 'Enter path of test reports:?', 
-                 parameters: [
-                 [$class: 'TextParameterDefinition', defaultValue: 'None', description: 'Ingrese la url del repositorio', name: 'GIT_URL'],
-                 [$class: 'TextParameterDefinition', defaultValue: 'None', description: 'Ingrese el nombre de la aplicacion', name: 'APP_NAME']
-                ])
-                echo "La URL del repo es: "+userInput['GIT_URL']
-                echo "El nombre de la app es: "+userInput['APP_NAME']
-                sh 'oc new-app -p APP_NAME=' + userInput['APP_NAME'] + ' -f https://github.com/gditrani269/OS-Pipeline-Gen/blob/master/Pipeline-Template.yaml'
+          stage('ImageStream') {
+            dir('app') {
+              sh 'oc new-app -f https://raw.githubusercontent.com/gditrani269/s2i-dotnetcore-ex/master/openshift/ImageStream.yaml'
             }
           }
-        }  
+          stage('BuildConfig') {
+            dir('app') {
+              sh 'oc new-app -f https://raw.githubusercontent.com/gditrani269/s2i-dotnetcore-ex/master/openshift/BuildConfig.yaml'
+              sh 'sleep 8'
+              sh 'oc logs -f bc/ger'
+            }
+          }
+          stage('DeploymentConfig') {
+            dir('app') {
+              sh 'oc new-app -f https://raw.githubusercontent.com/gditrani269/s2i-dotnetcore-ex/master/openshift/DeploymentConfig.yaml'
+              sh 'sleep 10'
+              sh 'oc logs dc/ger'
+            }
+          }
+          stage('Service') {
+            dir('app') {
+              sh 'oc new-app -f https://raw.githubusercontent.com/gditrani269/s2i-dotnetcore-ex/master/openshift/Service.yaml'
+              sh 'sleep 8'
+              sh 'oc logs svc/ger'
+            }
+          }
+          stage('Route') {
+            dir('app') {
+              sh 'oc new-app -f https://raw.githubusercontent.com/gditrani269/s2i-dotnetcore-ex/master/openshift/Route.yaml'
+              sh 'sleep 8'
+              sh 'oc describe route/ger'
+            }
+          }
+        }
