@@ -1,40 +1,8 @@
-apiVersion: v1
-kind: Template
-labels:
-  demo: pepelui2
+kind: "BuildConfig"
+apiVersion: "v1"
 metadata:
-  annotations:
-    description: template de generacion de pipelines
-  name: pepelui2
-parameters:
-- description: Name of the App
-  displayName: App Name
-  name: APP_NAME
-objects:
-- apiVersion: v1
-  kind: BuildConfig
-  metadata:
-   name: pepelui2
+  name: "sample-pipeline"
 spec:
   strategy:
     jenkinsPipelineStrategy:
-      jenkinsfile: |-
-        node {
-          stage('holis') {
-            sh "echo test 1"
-          }
-          stage('input ') {
-            sh 'echo hola'
-            script {
-                 def userInput = input(
-                 id: 'userInput', message: 'Enter path of test reports:?', 
-                 parameters: [
-                 [$class: 'TextParameterDefinition', defaultValue: 'None', description: 'Ingrese la url del repositorio', name: 'GIT_URL'],
-                 [$class: 'TextParameterDefinition', defaultValue: 'None', description: 'Ingrese el nombre de la aplicacion', name: 'APP_NAME']
-                ])
-                echo "La URL del repo es: "+userInput['GIT_URL']
-                echo "El nombre de la app es: "+userInput['APP_NAME']
-                sh 'oc new-app -p APP_NAME=' + userInput['APP_NAME'] + ' -f https://github.com/gditrani269/OS-Pipeline-Gen/blob/master/Pipeline-Template.yaml'
-            }
-          }
-        }   
+      jenkinsfile: "node('agent') {\nstage 'build'\nopenshiftBuild(buildConfig: 'ruby-sample-build', showBuildLogs: 'true')\nstage 'deploy'\nopenshiftDeploy(deploymentConfig: 'frontend')\n}"
