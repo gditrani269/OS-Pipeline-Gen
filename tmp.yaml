@@ -5,7 +5,7 @@ labels:
 metadata:
   annotations:
     description: template de generacion de pipelines
-  name: pipeline-gen
+  name: pepelui
 parameters:
 - description: Name of the App
   displayName: App Name
