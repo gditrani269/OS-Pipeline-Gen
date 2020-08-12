@@ -9,7 +9,8 @@ metadata:
 parameters:
 - description: Name of the App
   displayName: App Name
-  name: APP_NAMEobjects:
+  name: APP_NAME
+objects:
   kind: BuildConfig
   metadata:
    name: pepelui
@@ -36,4 +37,4 @@ spec:
                 sh 'oc new-app -p APP_NAME=' + userInput['APP_NAME'] + ' -f https://github.com/gditrani269/OS-Pipeline-Gen/blob/master/Pipeline-Template.yaml'
             }
           }
-        }   
+        }  
