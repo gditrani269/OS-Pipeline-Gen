@@ -1,7 +1,8 @@
 apiVersion: build.openshift.io/v1
-kind: BuildConfig
-metadata:
-  name: pepelui
+objects:
+  kind: BuildConfig
+  metadata:
+   name: pepelui
 spec:
   strategy:
     type: JenkinsPipeline
