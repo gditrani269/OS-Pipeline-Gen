@@ -1,4 +1,5 @@
 apiVersion: build.openshift.io/v1
+kind: Template
 objects:
   kind: BuildConfig
   metadata:
