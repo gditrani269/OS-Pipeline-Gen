@@ -11,6 +11,7 @@ parameters:
   displayName: App Name
   name: APP_NAME
 objects:
+- apiVersion: v1
   kind: BuildConfig
   metadata:
    name: pepelui
