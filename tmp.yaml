@@ -1,6 +1,15 @@
 apiVersion: build.openshift.io/v1
 kind: Template
-objects:
+labels:
+  demo: pipe-template-ger
+metadata:
+  annotations:
+    description: template de generacion de pipelines
+  name: pipeline-gen
+parameters:
+- description: Name of the App
+  displayName: App Name
+  name: APP_NAMEobjects:
   kind: BuildConfig
   metadata:
    name: pepelui
