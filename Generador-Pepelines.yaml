@@ -15,13 +15,13 @@ spec:
                  def userInput = input(
                  id: 'userInput', message: 'Enter path of test reports:?', 
                  parameters: [
-                 [$class: 'TextParameterDefinition', defaultValue: 'None', description: 'Ingrese la url del repositorio', name: 'GIT_URL'],
-                 [$class: 'TextParameterDefinition', defaultValue: 'None', description: 'Ingrese el nombre de la aplicacion', name: 'APP_NAME']
+                 [$class: 'TextParameterDefinition', defaultValue: 'none', description: 'Ingrese la url del repositorio', name: 'GIT_URL'],
+                 [$class: 'TextParameterDefinition', defaultValue: 'none', description: 'Ingrese el nombre de la aplicacion', name: 'APP_NAME']
                 ])
                 echo "La URL del repo es: "+userInput['GIT_URL']
                 echo "El nombre de la app es: "+userInput['APP_NAME']
                 //sh 'oc new-app -p APP_NAME=' + userInput['APP_NAME'] + ' -f https://github.com/gditrani269/OS-Pipeline-Gen/blob/master/Pipeline-Template.yaml'
-                sh 'oc create -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/tmp2.yaml'
+                sh 'oc process -p SERVICE_NAME='+userInput['APP_NAME'] + '-p SERVICE_GIT_URL=' + userInput['GIT_URL'] + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/tmp2.yaml | oc create -f -'
             }
           }
         }   
