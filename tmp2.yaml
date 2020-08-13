@@ -1,11 +1,9 @@
-kind: "BuildConfig"
-apiVersion: "build.openshift.io/v1"
+apiVersion: v1
+kind: Template
 metadata:
+  annotations:
+    description: ${SERVICE_NAME}
   name: ${SERVICE_NAME}
-spec:
-  strategy:
-    jenkinsPipelineStrategy:
-      jenkinsfile: "node('agent') {\nstage 'build'\nopenshiftBuild(buildConfig: 'ruby-sample-build', showBuildLogs: 'true')\nstage 'deploy'\nopenshiftDeploy(deploymentConfig: 'frontend')\n}"
 parameters:
 - description: Name of the service
   displayName: Service Name
@@ -13,3 +11,57 @@ parameters:
 - description: Git repository where service is stored
   displayName: GIT Service URL
   name: SERVICE_GIT_URL
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    name: ${SERVICE_NAME}-pipeline
+    namespace: ${PROJECT_NAME}
+    selfLink: /oapi/v1/namespaces/${SERVICE_NAME}/buildconfigs/${SERVICE_NAME}-pipeline
+    uid: d36cdd8b-a3f7-11e7-aeb3-001a4a408b47
+    resourceVersion: '144151918'
+    creationTimestamp: '2017-09-28T02:50:45Z'
+    labels:
+      name: ${SERVICE_NAME}-pipeline
+    annotations:
+      pipeline.alpha.openshift.io/uses: >-
+        [{"name": "${SERVICE_NAME}", "namespace": "", "kind":
+        "DeploymentConfig"}]
+  spec:
+    runPolicy: Serial
+    source:
+      type: Git
+      git:
+        uri: ${SERVICE_GIT_URL}
+        ref: master
+    strategy:
+      type: JenkinsPipeline
+      jenkinsPipelineStrategy:
+          jenkinsfile: |-
+            node {
+              stage('holis') {
+                sh "echo test 1"
+              }
+              stage('input ') {
+                sh 'echo hola'
+                script {
+                     def userInput = input(
+                     id: 'userInput', message: 'Enter path of test reports:?', 
+                     parameters: [
+                     [$class: 'TextParameterDefinition', defaultValue: 'None', description: 'Ingrese la url del repositorio', name: 'GIT_URL'],
+                     [$class: 'TextParameterDefinition', defaultValue: 'None', description: 'Ingrese el nombre de la aplicacion', name: 'APP_NAME']
+                    ])
+                    echo "La URL del repo es: "+userInput['GIT_URL']
+                    echo "El nombre de la app es: "+userInput['APP_NAME']
+                    //sh 'oc new-app -p APP_NAME=' + userInput['APP_NAME'] + ' -f https://github.com/gditrani269/OS-Pipeline-Gen/blob/master/Pipeline-Template.yaml'
+                    sh 'oc create -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/tmp2.yaml'
+                }
+              }
+            }   
+    output: {}
+    resources: {}
+    postCommit: {}
+    completionDeadlineSeconds: 3600
+    nodeSelector: {}
+  status:
+    lastVersion: 11
