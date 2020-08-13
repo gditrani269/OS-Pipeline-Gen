@@ -16,11 +16,6 @@ objects:
   kind: BuildConfig
   metadata:
     name: ${SERVICE_NAME}-pipeline
-    namespace: ${PROJECT_NAME}
-    selfLink: /oapi/v1/namespaces/${SERVICE_NAME}/buildconfigs/${SERVICE_NAME}-pipeline
-    uid: d36cdd8b-a3f7-11e7-aeb3-001a4a408b47
-    resourceVersion: '144151918'
-    creationTimestamp: '2017-09-28T02:50:45Z'
     labels:
       name: ${SERVICE_NAME}-pipeline
     annotations:
