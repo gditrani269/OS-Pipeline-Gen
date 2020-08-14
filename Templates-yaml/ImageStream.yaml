@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Template
+labels:
+  demo: ${APP_NAME}
+metadata:
+  annotations:
+    description: template de imafe stream
+  name: ${APP_NAME}
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: ${APP_NAME}
+    labels:
+      app: ${APP_NAME}
+      application: ${APP_NAME}
+  spec:
+    tags:
+    - name: latest
+parameters:
+- displayName: Application name
+  name: APP_NAME
+  required: true
