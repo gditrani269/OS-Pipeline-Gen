@@ -37,6 +37,15 @@ objects:
         ref: master
     strategy:
       type: JenkinsPipeline
+      env:
+      - name: "SERVICE_NAME"
+        value: ${SERVICE_NAME}
+      - name: "SERVICE_GIT_URL"
+        value: ${SERVICE_GIT_URL}
+      - name: "GIT_REF"
+        value: ${GIT_REF}
+      - name: "CONTEXTDIR_TEMPL"
+        value: ${CONTEXTDIR_TEMPL}
       jenkinsPipelineStrategy:
           jenkinsfile: |-
            node {
