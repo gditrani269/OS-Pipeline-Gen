@@ -11,6 +11,12 @@ parameters:
 - description: Git repository where service is stored
   displayName: GIT Service URL
   name: SERVICE_GIT_URL
+- displayName: Git branch/tag reference
+  name: GIT_REF
+  required: true
+- displayName: ContexDir
+  name: CONTEXTDIR_TEMPL
+  required: true
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -40,33 +46,33 @@ objects:
              }
              stage('ImageStream') {
                dir('app') {
-                 sh 'oc new-app -f https://raw.githubusercontent.com/gditrani269/s2i-dotnetcore-ex/master/openshift/ImageStream.yaml'
+                 sh 'oc new-app -p APP_NAME=' + ${SERVICE_NAME} + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/ImageStream.yaml'
                }
              }
              stage('BuildConfig') {
                dir('app') {
-                 sh 'oc new-app -f https://raw.githubusercontent.com/gditrani269/s2i-dotnetcore-ex/master/openshift/BuildConfig.yaml'
+                 sh 'oc new-app -p APP_NAME=' + ${SERVICE_NAME} + ' -p GIT_URI=' + ${SERVICE_GIT_URL} + ' -p GIT_REF=' + ${GIT_REF} + ' -p CONTEXTDIR_TEMPL=' + ${SERVICE_GIT_URL} + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/BuildConfig.yaml'
                  sh 'sleep 8'
                  sh 'oc logs -f bc/ger'
                }
              }
              stage('DeploymentConfig') {
                dir('app') {
-                 sh 'oc new-app -f https://raw.githubusercontent.com/gditrani269/s2i-dotnetcore-ex/master/openshift/DeploymentConfig.yaml'
+                 sh 'oc new-app -p APP_NAME=' + ${SERVICE_NAME} + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/DeploymentConfig.yaml'
                  sh 'sleep 10'
                  sh 'oc logs dc/ger'
                }
              }
              stage('Service') {
                dir('app') {
-                 sh 'oc new-app -f https://raw.githubusercontent.com/gditrani269/s2i-dotnetcore-ex/master/openshift/Service.yaml'
+                 sh 'oc new-app -p APP_NAME=' + ${SERVICE_NAME} + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/Service.yaml'
                  sh 'sleep 8'
                  sh 'oc logs svc/ger'
                }
              }
              stage('Route') {
                dir('app') {
-                 sh 'oc new-app -f https://raw.githubusercontent.com/gditrani269/s2i-dotnetcore-ex/master/openshift/Route.yaml'
+                 sh 'oc new-app -p APP_NAME=' + ${SERVICE_NAME} + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/Route.yaml'
                  sh 'sleep 8'
                  sh 'oc describe route/ger'
                }
