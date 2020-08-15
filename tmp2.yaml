@@ -62,28 +62,28 @@ objects:
                dir('app') {
                  sh 'oc new-app -p APP_NAME=' + "${SERVICE_NAME}" + ' -p GIT_URI=' + "${SERVICE_GIT_URL}" + ' -p GIT_REF=' + "${GIT_REF}" + ' -p CONTEXTDIR_TEMPL=' + "${CONTEXTDIR_TEMPL}" + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/BuildConfig.yaml'
                  sh 'sleep 8'
-                 sh 'oc logs -f bc/ger'
+                 sh 'oc logs -f bc/'+ "${SERVICE_NAME}"
                }
              }
              stage('DeploymentConfig') {
                dir('app') {
                  sh 'oc new-app -p APP_NAME=' + "${SERVICE_NAME}" + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/DeploymentConfig.yaml'
                  sh 'sleep 10'
-                 sh 'oc logs dc/ger'
+                 sh 'oc logs dc/'+ "${SERVICE_NAME}"
                }
              }
              stage('Service') {
                dir('app') {
                  sh 'oc new-app -p APP_NAME=' + "${SERVICE_NAME}" + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/Service.yaml'
                  sh 'sleep 8'
-                 sh 'oc logs svc/ger'
+                 sh 'oc logs svc/'+ "${SERVICE_NAME}"
                }
              }
              stage('Route') {
                dir('app') {
                  sh 'oc new-app -p APP_NAME=' + "${SERVICE_NAME}" + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/Route.yaml'
                  sh 'sleep 8'
-                 sh 'oc describe route/ger'
+                 sh 'oc describe route/'+ "${SERVICE_NAME}"
                }
              }
            } 
