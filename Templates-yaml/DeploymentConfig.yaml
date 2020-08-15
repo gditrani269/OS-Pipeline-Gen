@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Template
+labels:
+  demo: ${APP_NAME}
+metadata:
+  annotations:
+    description: template de deploymentconfig
+  name: ${APP_NAME}
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: ${APP_NAME}
+    labels:
+      app: ${APP_NAME}
+      application: ${APP_NAME}
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: ${APP_NAME}
+    strategy:
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          application: ${APP_NAME}
+          deploymentconfig: ${APP_NAME}
+        name: ${APP_NAME}
+      spec:
+        containers:
+        - env:
+          - name: POSTGRES_HOST
+            value: ${APP_NAME}-postgresql
+          image: ${APP_NAME}
+          imagePullPolicy: Always
+          name: ${APP_NAME}
+          ports:
+          - containerPort: 8778
+            name: jolokia
+            protocol: TCP
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 8443
+            name: https
+            protocol: TCP
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 75
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${APP_NAME}
+        from:
+          kind: ImageStreamTag
+          name: ${APP_NAME}:latest
+      type: ImageChange
+    - type: ConfigChange
+parameters:
+- displayName: Application name
+  name: APP_NAME
+  required: true
