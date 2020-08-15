@@ -14,7 +14,7 @@ parameters:
 - displayName: Git branch/tag reference
   name: GIT_REF
   required: true
-- displayName: ContexDir
+- displayName: CONTEXTDIR_TEMPL
   name: CONTEXTDIR_TEMPL
   required: true
 objects:
