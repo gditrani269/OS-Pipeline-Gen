@@ -50,38 +50,38 @@ objects:
           jenkinsfile: |-
            node {
              stage('delete prev ver') {
-               sh "oc delete all --selector app=ger"
-               sh "oc delete all --selector application=ger"
+               sh "oc delete all --selector app="+ "${SERVICE_NAME}"
+               sh "oc delete all --selector application="+ "${SERVICE_NAME}"
              }
              stage('ImageStream') {
                dir('app') {
-                 sh 'oc new-app -p APP_NAME=' + ${SERVICE_NAME} + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/ImageStream.yaml'
+                 sh 'oc new-app -p APP_NAME=' + "${SERVICE_NAME}" + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/ImageStream.yaml'
                }
              }
              stage('BuildConfig') {
                dir('app') {
-                 sh 'oc new-app -p APP_NAME=' + ${SERVICE_NAME} + ' -p GIT_URI=' + "${SERVICE_GIT_URL}" + ' -p GIT_REF=' + ${GIT_REF} + ' -p CONTEXTDIR_TEMPL=' + ${CONTEXTDIR_TEMPL} + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/BuildConfig.yaml'
+                 sh 'oc new-app -p APP_NAME=' + "${SERVICE_NAME}" + ' -p GIT_URI=' + "${SERVICE_GIT_URL}" + ' -p GIT_REF=' + "${GIT_REF}" + ' -p CONTEXTDIR_TEMPL=' + "${CONTEXTDIR_TEMPL}" + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/BuildConfig.yaml'
                  sh 'sleep 8'
                  sh 'oc logs -f bc/ger'
                }
              }
              stage('DeploymentConfig') {
                dir('app') {
-                 sh 'oc new-app -p APP_NAME=' + ${SERVICE_NAME} + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/DeploymentConfig.yaml'
+                 sh 'oc new-app -p APP_NAME=' + "${SERVICE_NAME}" + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/DeploymentConfig.yaml'
                  sh 'sleep 10'
                  sh 'oc logs dc/ger'
                }
              }
              stage('Service') {
                dir('app') {
-                 sh 'oc new-app -p APP_NAME=' + ${SERVICE_NAME} + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/Service.yaml'
+                 sh 'oc new-app -p APP_NAME=' + "${SERVICE_NAME}" + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/Service.yaml'
                  sh 'sleep 8'
                  sh 'oc logs svc/ger'
                }
              }
              stage('Route') {
                dir('app') {
-                 sh 'oc new-app -p APP_NAME=' + ${SERVICE_NAME} + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/Route.yaml'
+                 sh 'oc new-app -p APP_NAME=' + "${SERVICE_NAME}" + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/Route.yaml'
                  sh 'sleep 8'
                  sh 'oc describe route/ger'
                }
