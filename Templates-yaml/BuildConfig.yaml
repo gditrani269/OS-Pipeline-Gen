@@ -28,8 +28,8 @@ objects:
     strategy:
       sourceStrategy:
         env:
-        - name: MAVEN_MIRROR_URL
-          value: ${MAVEN_MIRROR_URL}
+        - name: eliminarL
+          value: eliminar
         from:
           kind: ImageStreamTag
           name: dotnet:2.2
@@ -53,6 +53,3 @@ parameters:
 - displayName: ContexDir
   name: CONTEXTDIR_TEMPL
   required: true
-- description: Maven mirror url. If nexus is deployed locally, use nexus url (e.g. http://nexus.ci:8081/content/groups/public/)
-  displayName: Maven mirror url
-  name: MAVEN_MIRROR_URL
