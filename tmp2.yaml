@@ -60,7 +60,7 @@ objects:
              }
              stage('BuildConfig') {
                dir('app') {
-                 sh 'oc new-app -p APP_NAME=' + ${SERVICE_NAME} + ' -p GIT_URI=' + ${SERVICE_GIT_URL} + ' -p GIT_REF=' + ${GIT_REF} + ' -p CONTEXTDIR_TEMPL=' + ${SERVICE_GIT_URL} + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/BuildConfig.yaml'
+                 sh 'oc new-app -p APP_NAME=' + ${SERVICE_NAME} + ' -p GIT_URI=' + "${SERVICE_GIT_URL}" + ' -p GIT_REF=' + ${GIT_REF} + ' -p CONTEXTDIR_TEMPL=' + ${CONTEXTDIR_TEMPL} + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/Templates-yaml/BuildConfig.yaml'
                  sh 'sleep 8'
                  sh 'oc logs -f bc/ger'
                }
