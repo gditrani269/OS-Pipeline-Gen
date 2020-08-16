@@ -24,6 +24,7 @@ spec:
                 echo "El nombre de la app es: "+userInput['APP_NAME']
                 sh "oc delete all --selector app="+ userInput['APP_NAME']+"-pipeline"
                 sh "oc delete all --selector application="+ userInput['APP_NAME']+"-pipeline"
+                sh "oc delete all --selector buildconfig="+ userInput['APP_NAME']+"-pipeline"
                 //sh 'oc new-app -p APP_NAME=' + userInput['APP_NAME'] + ' -f https://github.com/gditrani269/OS-Pipeline-Gen/blob/master/Pipeline-Template.yaml'
                 sh 'oc process -p SERVICE_NAME='+userInput['APP_NAME'] + ' -p SERVICE_GIT_URL=' + userInput['GIT_URL'] + ' -p GIT_REF=' + userInput['GIT_REF'] + ' -p CONTEXTDIR_TEMPL=' + userInput['CONTEXTDIR_TEMPL'] + ' -f https://raw.githubusercontent.com/gditrani269/OS-Pipeline-Gen/master/tmp2.yaml | oc create -f -'
             }
