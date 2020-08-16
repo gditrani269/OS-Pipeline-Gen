@@ -50,8 +50,6 @@ objects:
           jenkinsfile: |-
            node {
              stage('delete prev ver') {
-               sh "oc delete all --selector app="+ "${SERVICE_NAME}"+"-pipeline"
-               sh "oc delete all --selector application="+ "${SERVICE_NAME}"+"-pipeline"
                sh "oc delete all --selector app="+ "${SERVICE_NAME}"
                sh "oc delete all --selector application="+ "${SERVICE_NAME}"
              }
