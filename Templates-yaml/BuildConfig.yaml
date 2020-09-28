@@ -24,6 +24,8 @@ objects:
       git:
         ref: ${GIT_REF}
         uri: ${GIT_URI}
+      sourceSecret:
+        name: githubpusher
       type: Git
     strategy:
       sourceStrategy:
